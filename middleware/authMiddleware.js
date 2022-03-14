@@ -3,6 +3,7 @@ const Token = require("../model/Token.model");
 const Cert = require("../model/Cert.model");
 const Project = require("../model/Project.model");
 const Skill = require("../model/Skill.model");
+const Detail = require("../model/Detail.model");
 
 require("dotenv").config();
 
@@ -61,25 +62,34 @@ const authorizeUser = async (req,res,next) => {
         })
     }catch(e){
         console.log(e);
+        return res.status(500).json({
+            ok : false,
+            message : "internal error"
+        })
     }
 }
 
-const authPostEdit = async (req,res) => {
+const authPostEdit = async (req,res,next) => {
     try {
-        const {uid} = req.usercred;
-        const {postId, postType} = req.body;
+        const {uid} = req.userCred;
+        const postType = req.url.split("/")[2];
+        const {postId} = req.params;
+
         if(postId && postType){
             let bucket;
             switch(postType){
                 case "cert":
-                    bucket = await Cert.findById(postId);
+                    bucket = await Cert.findOne({_id : postId});
                     break;
                 case "project":
-                    bucket = await Project.findById(postId);
+                    bucket = await Project.findOne({_id : postId});
                     break;
                 case "skill":
-                    bucket = await Skill.findById(postId);
+                    bucket = await Skill.findOne({_id : postId});
                     break;
+                case "detail":
+                    bucket = await Detail.findOne({_id : postId});
+                    break
                 default:
                     return res.status(400).json({
                         ok : false,
@@ -87,7 +97,8 @@ const authPostEdit = async (req,res) => {
                     })
             }
             if(bucket){
-                if(bucket.belongsTo === uid){
+
+                if(bucket.belongsTo == uid){
                     req.bucket = bucket;
                     return next()
                 }
