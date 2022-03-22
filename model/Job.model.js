@@ -9,22 +9,22 @@ const JobVacancySchema = Schema({
     },
     description : {
         type : String,
-        maxLength : 250
+        maxLength : [250, "must be less than 250"]
     },
     reqruiter : {
         type : String,
         required : [true,"Reqruiter required"],
-		maxLength : 30
+		maxLength : [30,"must be less than 30"]
     },
     region : {
         type : String,
         required : [true,"Region required"],
-		maxLength : 30
+		maxLength : [30,"must be less than 30"]
     },
     category : {
         type : String,
         required : [true,"Category required"],
-		maxLength : 20
+		maxLength : [30,"must be less than 30"]
     },
     salary : {
         from : {
