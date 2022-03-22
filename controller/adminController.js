@@ -1,6 +1,5 @@
 const Admin = require("../model/Admin.model");
 const Jobvacancy = require("../model/Job.model");
-const {isPassedRequired} = require("../lib/externalTools");
 
 exports.addJob = async (req,res) => {
     try{
