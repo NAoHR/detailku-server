@@ -1,18 +1,38 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/User.model");
 const Token = require("../model/Token.model");
+const Admin = require("../model/Admin.model");
 
 exports.authlogin = async (req,res) => {
     try{
+        let useroradmin = req._parsedUrl.path.split("/")[1];
+
         const {username, password} = req.body;
         if(username && password){
-            const user = await User.findOne({
-                username : String(username)
-            })
-            if(user){
-                const match = await bcrypt.compare(password, user.password);
+            let person;
+
+            switch(useroradmin){
+                case "user":
+                    person = await User.findOne({
+                        username : String(username)
+                    })
+                    break
+                case "admin":
+                    person = await Admin.findOne({
+                        username : String(username)
+                    })
+                    break;
+                default:
+                    return res.status(400).json({
+                        ok : false,
+                        message : "not allowed"
+                    })
+            }
+            if(person){
+                const match = await bcrypt.compare(password, person.password);
                 if(match){
-                    const detailkutoken = await user.createAccessToken();
+                    const detailkutoken = await person.createAccessToken();
+
                     return res.status(200).json({
                         ok : true,
                         message : "success",
@@ -40,6 +60,10 @@ exports.authlogin = async (req,res) => {
             message : "internal error"
         })
     }
+}
+
+exports.authloginAdmin = async (req,res) => {
+
 }
 
 exports.authlogout = async (req,res) => {
