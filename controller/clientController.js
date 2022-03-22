@@ -3,9 +3,11 @@ const Detail = require("../model/Detail.model");
 const Cert = require("../model/Cert.model");
 const Skill = require("../model/Skill.model");
 const Project = require("../model/Project.model");
+const Job = require("../model/Job.model");
 
 exports.alldata = async function(req,res) {
     try{
+        console.log(req);
         let allData = await User.find();
         return res.status(200).json({
             ok : true,
@@ -98,30 +100,55 @@ exports.usernameBasedUser = async function(req,res){
 
 exports.gradeBasedUser = async function(req,res){
     try {
-        const {grade} = req.params;
-        const gradeBUs = await User.find({
-            grade : String(grade)
-        })
-
-        return res.status(200).json({
-            ok : true,
-            message : gradeBUs.length === 0 ? "no user" : "user found",
-            data : gradeBUs.length ===  0 ? [] : gradeBUs.map((val)=>{
-                return {
+        const userDetail = async (data) => {
+            return Promise.all(data.map(async (val) => {
+                let detail = await Detail.findOne({_id : val.detail})
+                return await {
                     username : val.username,
                     name : val.name,
                     grade : val.grade,
                     certificate : val.certificate,
                     project : val.project,
                     skill : val.skill,
-                }
-            })
+                    detail : {
+                        picture : detail.picture,
+                        description : detail.description ? detail.description : ""
+                    }
+                }    
+            }))
+        }
+        
+        const {grade} = req.params;
+        const gradeBUs = await User.find({
+            grade : String(grade)
+        })
+        return await res.status(200).json({
+            ok : true,
+            message : gradeBUs.length === 0 ? "no user" : "user found",
+            data : gradeBUs.length ===  0 ? [] : await userDetail(gradeBUs)
         })
 
     } catch (e) {
         console.log(e);
         return res.status(501).json({
             ok : true,
+            message : "internal Error"
+        })
+    }
+}
+
+exports.jobData = async (req,res) => {
+    try{
+        const JobData = await Job.find();
+        return res.status(200).json({
+            ok : true,
+            message : "successfully fetched",
+            data : JobData
+        })
+    }catch(e){
+        console.log(e)
+        return res.status(501).json({
+            ok : false,
             message : "internal Error"
         })
     }
