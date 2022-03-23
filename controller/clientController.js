@@ -7,35 +7,56 @@ const Job = require("../model/Job.model");
 
 exports.alldata = async function(req,res) {
     try{
-        console.log(req);
         let allData = await User.find();
+        const path = `${req.baseurl}/api/client/grade/`;
         return res.status(200).json({
             ok : true,
             message : "successfuly fetched",
             data : [
                 {
-                    "grade" : "X SIJA 1",
-                    "count" : allData.filter((val) => val.grade === "X_SIJA_1").length,
+                    "grade" : "X SIJA",
+                    "data" : [
+                        {
+                            "subgrade" : "X SIJA 1",
+                            "path" : `${path}X_SIJA_1`,
+                            "count" : allData.filter((val) => val.grade === "X_SIJA_1").length,
+                        },
+                        {
+                            "subgrade" : "X SIJA 2",
+                            "path" : `${path}X_SIJA_2`,
+                            "count" : allData.filter((val) => val.grade === "X_SIJA_2").length,
+                        }
+                    ]
                 },
                 {
-                    "grade" : "X SIJA 2",
-                    "count" : allData.filter((val) => val.grade === "X_SIJA_2").length,
+                    "grade" : "XI SIJA",
+                    "data" : [
+                        {
+                            "subgrade" : "XI SIJA 1",
+                            "path" : `${path}XI_SIJA_1`,
+                            "count" : allData.filter((val) => val.grade === "XI_SIJA_1").length,
+                        },
+                        {
+                            "subgrade" : "XI SIJA 2",
+                            "path" : `${path}XI_SIJA_2`,
+                            "count" : allData.filter((val) => val.grade === "XI_SIJA_2").length,
+                        }
+                    ]
                 },
                 {
-                    "grade" : "XI SIJA 1",
-                    "count" : allData.filter((val) => val.grade === "XI_SIJA_1").length,
-                },
-                {
-                    "grade" : "XI SIJA 2",
-                    "count" : allData.filter((val) => val.grade === "XI_SIJA_2").length,
-                },
-                {
-                    "grade" : "XII SIJA 1",
-                    "count" : allData.filter((val) => val.grade === "XII_SIJA_1").length,
-                },
-                {
-                    "grade" : "XII SIJA 2",
-                    "count" : allData.filter((val) => val.grade === "XII_SIJA_2").length,
+                    "grade" : "XII SIJA",
+                    "data" : [
+                        {
+                            "subgrade" : "XII SIJA 1",
+                            "path" : `${path}XII_SIJA_1`,
+                            "count" : allData.filter((val) => val.grade === "XII_SIJA_1").length,
+                        },
+                        {
+                            "subgrade" : "XII SIJA 2",
+                            "path" : `${path}XII_SIJA_2`,
+                            "count" : allData.filter((val) => val.grade === "XII_SIJA_2").length,
+                        }
+                    ]
                 }
             ]
         })
@@ -100,10 +121,12 @@ exports.usernameBasedUser = async function(req,res){
 
 exports.gradeBasedUser = async function(req,res){
     try {
+        const path = `${req.baseurl}/api/client/user`
         const userDetail = async (data) => {
             return Promise.all(data.map(async (val) => {
                 let detail = await Detail.findOne({_id : val.detail})
                 return await {
+                    path : `${path}/${val.username}`,
                     username : val.username,
                     name : val.name,
                     grade : val.grade,
