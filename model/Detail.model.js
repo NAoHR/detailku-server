@@ -40,8 +40,7 @@ const DetailSchema = Schema({
         default : undefined
     },
     picture : {
-        type : String,
-        default : "https://rcmi.fiu.edu/wp-content/uploads/sites/30/2018/02/no_user.png"
+        type : String
     }
 })
 
