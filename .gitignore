@@ -1,1 +1,8 @@
 node_modules
+prod
+testing
+.env
+init.js
+peps.jsong
+addData.js
+peps.json
