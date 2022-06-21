@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const Token = require("../model/Token.model");
 const Cert = require("../model/Cert.model");
 const Project = require("../model/Project.model");
 const Skill = require("../model/Skill.model");
@@ -13,47 +12,31 @@ const authorizeUser = async (req,res,next) => {
         if(authorization){
             const authToken = authorization.split(" ")[1];
             return await jwt.verify(authToken,process.env.SECRET_AT, async function(err,decoded){
-                const findToken = await Token.findOne({
-                    tokenId : authToken
-                });
-                if(findToken){
-
-                    if(err){
-                        switch(err.name){
-                            case "TokenExpiredError" :
-                                if(findToken){
-                                    await Token.deleteOne({
-                                        tokenId : authToken
-                                    });
-                                }
-    
-                                return res.status(401).json({
-                                    ok : false,
-                                    message : "token expired"
-                                });
-                            case "JsonWebTokenError":
-                                return res.status(401).json({
-                                    ok : false,
-                                    message : "wrong token format"
-                                })
-                            default:
-                                console.log(err);
-                                return res.status(501).json({
-                                    ok : true,
-                                    message : "internal error"
-                                })
-                        }
+                if(err){
+                    switch(err.name){
+                        case "TokenExpiredError" :
+                            return res.status(401).json({
+                                ok : false,
+                                message : "token expired"
+                            });
+                        case "JsonWebTokenError":
+                            return res.status(401).json({
+                                ok : false,
+                                message : "wrong token format"
+                            })
+                        default:
+                            console.log(err);
+                            return res.status(501).json({
+                                ok : true,
+                                message : "internal error"
+                            })
                     }
-                    req.userCred = {
-                        uid : decoded.uid,
-                        jwt : findToken
-                    };
-                    return next();
                 }
-                return res.status(404).json({
-                    ok : false,
-                    message : "token not found"
-                })
+                req.userCred = {
+                    uid : decoded.uid,
+                    jwt : authToken
+                };
+                return next();
             })
         }
         return res.status(404).json({
@@ -116,7 +99,7 @@ const authPostEdit = async (req,res,next) => {
             ok : false,
             message : "format error"
         })
-        
+
     } catch (e) {
         console.log(e);
         return res.status(500).json({

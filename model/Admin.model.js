@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const Token = require("../model/Token.model");
 const {Schema} = mongoose;
 
 const AdminScheme = Schema({
@@ -23,11 +22,6 @@ AdminScheme.methods = {
             },process.env.SECRET_AT,{
                 expiresIn : "1d"
             });
-
-            const tokenDb  = new Token({
-                tokenId : detailkutoken
-            })
-            await tokenDb.save();
 
             return detailkutoken;
 
