@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/User.model");
-const Token = require("../model/Token.model");
 const Admin = require("../model/Admin.model");
 
 exports.authlogin = async (req,res) => {
@@ -60,17 +59,4 @@ exports.authlogin = async (req,res) => {
             message : "internal error"
         })
     }
-}
-
-exports.authloginAdmin = async (req,res) => {
-
-}
-
-exports.authlogout = async (req,res) => {
-    const {jwt} = req.usercred;
-    const deleteOne = await Token.deleteOne({
-        tokenId : String(jwt.tokenId)
-    })
-    console.log(deleteOne)
-    return res.json({OK : false})
 }

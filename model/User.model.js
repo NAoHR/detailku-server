@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const Token = require("./Token.model");
 
 require("dotenv").config();
 
@@ -64,11 +63,6 @@ UserSchema.methods = {
             },process.env.SECRET_AT,{
                 expiresIn : "2d"
             });
-
-            const tokenDb  = new Token({
-                tokenId : detailkutoken
-            })
-            await tokenDb.save();
 
             return detailkutoken;
 

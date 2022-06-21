@@ -216,24 +216,20 @@ exports.editSkill = async (req,res) => {
         } = req.body;
         const bucket = req.bucket;
 
-        const updateData = await Skill.updateOne({
+        const updateData = await Skill.findOneAndUpdate({
             _id : String(bucket._id)
         },{
             skillName : skillName,
             percentage : percentage
         },{
             runValidators : true,
-            upsert: true
+            new : true
         })
-        if(updateData.modifiedCount || updateData.upsertedCount){
-            return res.status(200).json({
-                ok : true,
-                message : "data updated"
-            })
-        }
+
         return res.status(200).json({
             ok : true,
-            message : "0 updated"
+            message : "updated",
+            data : updateData
         })
     }catch(e){
         console.log(e);
@@ -242,14 +238,5 @@ exports.editSkill = async (req,res) => {
             message : "internal error"
         })
     }
-}
-
-exports.editCert = async (req,res) => {
-	const {} = req.body;
-
-}
-
-exports.editProject = async (req,res) => {
-    
 }
 // edit - close
