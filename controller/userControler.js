@@ -240,3 +240,47 @@ exports.editSkill = async (req,res) => {
     }
 }
 // edit - close
+
+// delete - open
+
+exports.deletePost = async (req,res) => {
+    try{
+        const {_id} = req.bucket;
+        const {postType} = req.params;
+        const {uid} = req.userCred;
+        let delBucket;
+        const postBelongsTo = await User.findById(uid);
+
+        switch(postType){
+            case "skill":
+                delBucket = await Skill.deleteOne({_id : _id});
+                postBelongsTo.skill = postBelongsTo.skill.filter((i) => i === _id);
+                break;
+            case "project":
+                delBucket = await Project.deleteOne({_id : _id});
+                postBelongsTo.project = postBelongsTo.project.filter((i) => i === _id);
+                break;
+            case "cert":
+                delBucket = await Cert.deleteOne({_id : _id});
+                postBelongsTo.cert = postBelongsTo.cert.filter((i) => i === _id);
+                break;
+            default:
+                return res.status(403).json({
+                    ok : true,
+                    message : "only accept skill, project, cert"
+                })
+        }
+
+        await postBelongsTo.save();
+        return res.status(200).json({
+            ok : true,
+            message : `${postType} deleted`
+        })
+    }catch(e){
+        console.log(e);
+        return res.status(500).json({
+            ok : false,
+            message : "internal error"
+        })
+    }
+}

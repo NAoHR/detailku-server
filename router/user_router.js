@@ -15,9 +15,10 @@ router.get("/me/project", authorizeUser, userControler.projectGet);
 router.get("/me/cert", authorizeUser, userControler.certGet);
 
 // edit 
-router.post("/edit/skill/:postId",authorizeUser, authPostEdit, userControler.editSkill)
-// router.post("/edit/cert",authorizeUser,authPostEdit, userControler.editCert)
-// router.post("/edit/project",authorizeUser,authPostEdit, userControler.editProject)
+router.put("/edit/skill/:postId",authorizeUser, authPostEdit, userControler.editSkill)
+
+// delete
+router.delete("/delete/:postType/:postId", authorizeUser, authPostEdit, userControler.deletePost);
 
 
 module.exports = router;
