@@ -1,5 +1,6 @@
 const Admin = require("../model/Admin.model");
 const Jobvacancy = require("../model/Job.model");
+const {errorHandler} = require("../utils/utils");
 
 // ==================== ADD - BEGIN ==================== \\
 exports.addJob = async (req,res) => {
@@ -29,30 +30,7 @@ exports.addJob = async (req,res) => {
             data :jobDetail
         })
     }catch(e){
-        let errorDetail;
-        console.log(e.name);
-
-        switch(e.name){
-            case "ValidationError":
-                errorDetail = {
-                    ok : false,
-                    scode : 400,
-                    message : e.message
-                }
-                break
-            default:
-                errorDetail = {
-                    ok : false,
-                    scode : 501,
-                    message : "internal error"
-                }
-                break
-        }
-
-        return res.status(errorDetail.scode).json({
-            ok : errorDetail.ok,
-            message : errorDetail.message
-        })
+        return errorHandler(e,res);
     }
 }
 
@@ -85,8 +63,7 @@ exports.editJob = async (req,res) => {
                 },
                 more : more
             },{
-                runValidators : true,
-                upsert : true
+                runValidators : true
             })
             console.log(updateJob);
             if(updateJob.modifiedCount || updateJob.upsertedCount){
@@ -100,43 +77,10 @@ exports.editJob = async (req,res) => {
                 message : "0 updated"
             })
         }
-        return res.status(401).json({
-            ok : false,
-            message : "job not found"
-        })
+        throw({name : "DNF"});
 
     } catch (e) {
-        console.log(e);
-
-        let errorDetail;
-        switch(e.name){
-            case "ValidationError":
-                errorDetail = {
-                    ok : false,
-                    scode : 400,
-                    message : e.message
-                }
-                break
-            case "CastError":
-                errorDetail = {
-                    ok : false,
-                    scode : 400,
-                    message : "format not valid"
-                }
-                break
-            default:
-                errorDetail = {
-                    ok : false,
-                    scode : 501,
-                    message : "internal error"
-                }
-                break
-        }
-
-        return res.status(errorDetail.scode).json({
-            ok : errorDetail.ok,
-            message : errorDetail.message
-        })
+        return errorHandler(e,res);
     }
 }
 

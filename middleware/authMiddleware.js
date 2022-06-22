@@ -6,7 +6,7 @@ const Detail = require("../model/Detail.model");
 
 require("dotenv").config();
 
-const authorizeUser = async (req,res,next) => {
+const authentication = async (req,res,next) => {
     try{
         const {authorization} = req.headers;
         if(authorization){
@@ -52,7 +52,7 @@ const authorizeUser = async (req,res,next) => {
     }
 }
 
-const authPostEdit = async (req,res,next) => {
+const authorization = async (req,res,next) => {
     try {
         const {uid} = req.userCred;
         const postType = req.url.split("/")[2];
@@ -81,7 +81,7 @@ const authPostEdit = async (req,res,next) => {
             }
             if(bucket){
 
-                if(bucket.belongsTo == uid){
+                if(bucket.belongsTo === uid){
                     req.bucket = bucket;
                     return next()
                 }
@@ -110,6 +110,6 @@ const authPostEdit = async (req,res,next) => {
 }
 
 module.exports = {
-    authorizeUser,
-    authPostEdit
+    authentication,
+    authorization
 }

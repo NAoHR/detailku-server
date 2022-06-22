@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/User.model");
 const Admin = require("../model/Admin.model");
+const {errorHandler} = require("../utils/utils");
 
 exports.authlogin = async (req,res) => {
     try{
@@ -43,20 +44,13 @@ exports.authlogin = async (req,res) => {
                     message : "wrong password"
                 })
             }
-            return res.status(400).json({
-                ok : false,
-                message : "username not found"
-            })
+            throw({name : "UNF"})
         }
         return res.status(400).json({
             ok : false,
             message : "invalid format"
         })
     }catch(e){
-        console.log(e)
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e,res);
     }
 }

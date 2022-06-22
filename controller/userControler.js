@@ -3,6 +3,7 @@ const User = require("../model/User.model");
 const Skill = require("../model/Skill.model");
 const Project = require("../model/Project.model");
 const Detail = require("../model/Detail.model");
+const {errorHandler} = require("../utils/utils");
 
 // ADD - open
 exports.postcert = async (req,res) => {
@@ -28,17 +29,12 @@ exports.postcert = async (req,res) => {
                 data : certPost
             })
         }
-        return res.status(400).json({
-            ok : false,
-            message : "user not found"
+        throw({
+            name : "UNF"
         })
 
     }catch(e){
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e,res);
     }
 }
 
@@ -63,17 +59,12 @@ exports.postSkill = async (req,res) => {
                 data : skillPost
             })
         }
-        return res.status(400).json({
-            ok : false,
-            message : "user not found"
+        throw({
+            name : "UNF"
         })
 
     }catch(e){
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e,res);
     }
 }
 
@@ -99,17 +90,12 @@ exports.postProject = async (req,res) => {
                 data : projectPost
             })
         }
-        return res.status(400).json({
-            ok : false,
-            message : "user not found"
+        throw({
+            name : "UNF"
         })
 
     }catch(e){
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e,res);
     }
 }
 
@@ -145,11 +131,7 @@ exports.me = async (req,res) => {
             message : "user not found"
         })
     } catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e,res);
     }
 }
 
@@ -163,11 +145,7 @@ exports.skillGet = async (req,res) => {
             data : userSkill
         })
     }catch(e){
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e,res);
     }
 }
 
@@ -199,11 +177,7 @@ exports.certGet = async (req,res) => {
             data : userCert
         })
     }catch(e){
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e,res);
     }
 }
 // read - close
@@ -232,11 +206,7 @@ exports.editSkill = async (req,res) => {
             data : updateData
         })
     }catch(e){
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e,res);
     }
 }
 // edit - close
@@ -277,10 +247,6 @@ exports.deletePost = async (req,res) => {
             message : `${postType} deleted`
         })
     }catch(e){
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e,res);
     }
 }
