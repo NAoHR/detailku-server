@@ -4,6 +4,7 @@ const Cert = require("../model/Cert.model");
 const Skill = require("../model/Skill.model");
 const Project = require("../model/Project.model");
 const Job = require("../model/Job.model");
+const {errorHandler} = require("../utils/utils");
 
 exports.alldata = async function(req,res) {
     try{
@@ -61,11 +62,7 @@ exports.alldata = async function(req,res) {
             ]
         })
     }catch(e){
-        console.log(e);
-        return res.status(501).json({
-            ok : true,
-            message : "internal Error"
-        })
+        return errorHandler(e,res);
     }
 }
 
@@ -102,7 +99,6 @@ exports.usernameBasedUser = async function(req,res){
 
         const usernameBU = await User.find({
             username : String(username)
-            
         })
 
         return await res.status(200).json({
@@ -111,11 +107,7 @@ exports.usernameBasedUser = async function(req,res){
             data : usernameBU.length ===  0 ? [] : await getUserCred(usernameBU)
         })
     }catch(e){
-        console.log(e);
-        return res.status(501).json({
-            ok : true,
-            message : "internal Error"
-        })
+        return errorHandler(e,res);
     }
 }
 
@@ -152,11 +144,7 @@ exports.gradeBasedUser = async function(req,res){
         })
 
     } catch (e) {
-        console.log(e);
-        return res.status(501).json({
-            ok : true,
-            message : "internal Error"
-        })
+        return errorHandler(e,res);
     }
 }
 
@@ -169,10 +157,6 @@ exports.jobData = async (req,res) => {
             data : JobData
         })
     }catch(e){
-        console.log(e)
-        return res.status(501).json({
-            ok : false,
-            message : "internal Error"
-        })
+        return errorHandler(e,res);
     }
 }
