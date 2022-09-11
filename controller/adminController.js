@@ -1,5 +1,6 @@
 const Admin = require("../model/Admin.model");
 const Jobvacancy = require("../model/Job.model");
+const Pkl = require("../model/Pkl.model");
 const {errorHandler} = require("../utils/utils");
 
 // ==================== ADD - BEGIN ==================== \\
@@ -20,6 +21,21 @@ exports.addJob = async (req,res) => {
     }
 }
 
+exports.addPkl = async (req, res) => {
+    try{
+        const {body} = req;
+        const pkl = new Pkl(body);
+
+        await pkl.save();
+        return res.status(200).json({
+            ok: true,
+            message: "data added",
+            data: pkl
+        })
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
 // ==================== ADD - END ==================== \\
 
 
@@ -29,17 +45,15 @@ exports.editJob = async (req,res) => {
     try {
         const {jobId} = req.params;
         const {body} = req;
-
-        const findJob = await Jobvacancy.findOne({ _id : jobId});
-        if(findJob){
-            const updateJob = await Jobvacancy.updateOne({
-                _id : jobId
-            },
-            body
-            ,{
-                runValidators : true
-            })
-            console.log(updateJob);
+        const updateJob = await Jobvacancy.updateOne({
+            _id : jobId
+        },
+        body
+        ,{
+            runValidators : true
+        })
+        
+        if(updateJob.matchedCount !== 0){
             if(updateJob.modifiedCount || updateJob.upsertedCount){
                 return res.status(200).json({
                     ok : true,
@@ -51,6 +65,7 @@ exports.editJob = async (req,res) => {
                 message : "0 updated"
             })
         }
+
         throw({name : "DNF"});
 
     } catch (e) {
@@ -58,4 +73,36 @@ exports.editJob = async (req,res) => {
     }
 }
 
+exports.editPkl = async(req, res) => {
+    const {pklId} = req.params;
+    const {body} = req;
+
+    try{
+        const updatePkl = await Pkl.updateOne({
+            _id: pklId
+        },
+        body
+        ,{
+            runValidators: true
+        })
+        
+        if(updatePkl.matchedCount !== 0){
+            if(updatePkl.modifiedCount || updatePkl.upsertedCount){
+                return res.status(200).json({
+                    ok : true,
+                    message : "data updated"
+                })
+            }
+            return res.status(200).json({
+                ok : true,
+                message : "0 updated"
+            })
+        }
+
+        throw({name : "DNF"});
+
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
 // ==================== ADD - END ==================== \\
