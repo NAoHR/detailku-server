@@ -9,4 +9,7 @@ router.post("/add/pkl", authentication, authorizationAdmin, adminController.addP
 router.put("/edit/job/:jobId", authentication, authorizationAdmin ,adminController.editJob);
 router.put("/edit/pkl/:pklId", authentication, authorizationAdmin, adminController.editPkl);
 
+router.delete("/delete/job/:jobId", authentication, authorizationAdmin, adminController.deleteJob);
+router.delete("/delete/pkl/:pklId", authentication, authorizationAdmin, adminController.deletePkl);
+
 module.exports = router 

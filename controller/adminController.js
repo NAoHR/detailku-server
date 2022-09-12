@@ -39,7 +39,7 @@ exports.addPkl = async (req, res) => {
 // ==================== ADD - END ==================== \\
 
 
-// ==================== ADD - BEGIN ==================== \\
+// ==================== delete - BEGIN ==================== \\
 
 exports.editJob = async (req,res) => {
     try {
@@ -105,4 +105,50 @@ exports.editPkl = async(req, res) => {
         return errorHandler(e, res);
     }
 }
-// ==================== ADD - END ==================== \\
+// ==================== delete - END ==================== \\
+
+
+
+// ==================== DELETE - START ==================== \\
+exports.deleteJob = async (req,res) => {
+    try{
+        const {jobId} = req.params;
+
+        const deleteData = await Jobvacancy.findOneAndDelete({
+            _id: jobId
+        })
+
+        if(deleteData){
+            return res.status(200).json({
+                ok: true,
+                message: "successfully deleted"
+            })
+        }
+
+        throw({name: "DNF"});
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
+
+exports.deletePkl = async (req,res) => {
+    try{
+        const {pklId} = req.params;
+
+        const deleteData = await Pkl.findOneAndDelete({
+            _id: pklId
+        })
+
+        if(deleteData){
+            return res.status(200).json({
+                ok: true,
+                message: "successfully deleted"
+            })
+        }
+
+        throw({name: "DNF"});
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
+// ==================== DELETE - END ==================== \\
