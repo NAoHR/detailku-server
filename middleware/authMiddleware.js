@@ -81,8 +81,8 @@ const authorization = async (req,res,next) => {
                     })
             }
             if(bucket){
-
-                if(bucket.belongsTo === uid){
+                
+                if(bucket.belongsTo.toString() === uid){
                     req.bucket = bucket;
                     return next()
                 }
