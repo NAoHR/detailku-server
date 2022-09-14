@@ -185,26 +185,29 @@ exports.certGet = async (req,res) => {
 // edit - open
 exports.editSkill = async (req,res) => {
     try{
-        const {
-            skillName,percentage
-        } = req.body;
+        const body = req.body;
         const bucket = req.bucket;
 
-        const updateData = await Skill.findOneAndUpdate({
+        const updateSkill = await Skill.updateOne({
             _id : String(bucket._id)
-        },{
-            skillName : skillName,
-            percentage : percentage
-        },{
+        },body,{
             runValidators : true,
-            new : true
+            new: true
         })
 
-        return res.status(200).json({
-            ok : true,
-            message : "updated",
-            data : updateData
-        })
+        if(updateSkill.matchedCount !== 0){
+            if(updateSkill.modifiedCount || updateSkill.upsertedCount){
+                return res.status(200).json({
+                    ok : true,
+                    message : "data updated"
+                })
+            }
+            return res.status(200).json({
+                ok : true,
+                message : "0 updated"
+            })
+        }
+        throw({name: "DNF"})
     }catch(e){
         return errorHandler(e,res);
     }

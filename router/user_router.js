@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const {strictBelongsTo} = require("../middleware/utilMiddleware");
 const {authorization,authentication} = require("../middleware/authMiddleware");
 const userControler = require("../controller/userControler")
 
@@ -15,7 +16,7 @@ router.get("/me/project", authentication, userControler.projectGet);
 router.get("/me/cert", authentication, userControler.certGet);
 
 // edit 
-router.put("/edit/skill/:postId",authentication, authorization, userControler.editSkill)
+router.put("/edit/skill/:postId",authentication, authorization, strictBelongsTo, userControler.editSkill)
 
 // delete
 router.delete("/delete/:postType/:postId", authentication, authorization, userControler.deletePost);
