@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 exports.errorHandler = (errorMessage,res) => {
     const errMess = (code=501,name="Internal Error",message="internal error occured") => {
         return res.status(code).json({
@@ -51,4 +53,8 @@ exports.errorHandler = (errorMessage,res) => {
             return errMess();
 
     }
+}
+
+exports.dbConfig = () => {
+    return process.env.STATUS === "deployment" ? process.env.MONGO_DB : process.env.MONGO_DEV
 }

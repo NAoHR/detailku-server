@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-require("dotenv").config();
+const {dbConfig} = require("./utils/utils");
 
 const clientRouter  = require("./router/client_router");
 const authRouter    = require("./router/Auth_router");
@@ -26,7 +26,7 @@ app.use("/api/auth",authRouter);
 app.use("/api/user",userRouter);
 app.use("/api/admin",adminRouter);
 
-mongoose.connect(process.env.MONGO_DB)
+mongoose.connect(dbConfig())
     .then(()=> {
         console.log("db started");
         app.listen(process.env.PORT || 5000, () =>{

@@ -1,27 +1,14 @@
 const Admin = require("../model/Admin.model");
 const Jobvacancy = require("../model/Job.model");
+const Pkl = require("../model/Pkl.model");
 const {errorHandler} = require("../utils/utils");
 
 // ==================== ADD - BEGIN ==================== \\
 exports.addJob = async (req,res) => {
     try{
-
-        const {
-            title,description,reqruiter,
-            region,category,salary,more
-        } = req.body;
-
+        const {body} = req;
         const jobDetail = new Jobvacancy({
-            title : title,
-            description : description,
-            reqruiter : reqruiter,
-            region : region,
-            category : category,
-            salary : {
-                from : salary.from,
-                to : salary.to
-            },
-            more : more
+            ...body
         })
         await jobDetail.save();
         return res.status(200).json({
@@ -34,38 +21,39 @@ exports.addJob = async (req,res) => {
     }
 }
 
+exports.addPkl = async (req, res) => {
+    try{
+        const {body} = req;
+        const pkl = new Pkl(body);
+
+        await pkl.save();
+        return res.status(200).json({
+            ok: true,
+            message: "data added",
+            data: pkl
+        })
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
 // ==================== ADD - END ==================== \\
 
 
-// ==================== ADD - BEGIN ==================== \\
+// ==================== delete - BEGIN ==================== \\
 
 exports.editJob = async (req,res) => {
     try {
-        const {jobId} = req.params
-        const {
-            title,description,reqruiter,
-            region,category,salary,more
-        } = req.body;
-        const findJob = await Jobvacancy.findOne({ _id : jobId});
-        if(findJob){
-            const updateJob = await Jobvacancy.updateOne({
-                _id : jobId
-            },
-            {
-                title : title,
-                description : description,
-                reqruiter : reqruiter,
-                region :region,
-                category : category,
-                salary : {
-                    from : salary.from,
-                    to : salary.to
-                },
-                more : more
-            },{
-                runValidators : true
-            })
-            console.log(updateJob);
+        const {jobId} = req.params;
+        const {body} = req;
+        const updateJob = await Jobvacancy.updateOne({
+            _id : jobId
+        },
+        body
+        ,{
+            runValidators : true
+        })
+        
+        if(updateJob.matchedCount !== 0){
             if(updateJob.modifiedCount || updateJob.upsertedCount){
                 return res.status(200).json({
                     ok : true,
@@ -77,6 +65,7 @@ exports.editJob = async (req,res) => {
                 message : "0 updated"
             })
         }
+
         throw({name : "DNF"});
 
     } catch (e) {
@@ -84,4 +73,82 @@ exports.editJob = async (req,res) => {
     }
 }
 
-// ==================== ADD - END ==================== \\
+exports.editPkl = async(req, res) => {
+    const {pklId} = req.params;
+    const {body} = req;
+
+    try{
+        const updatePkl = await Pkl.updateOne({
+            _id: pklId
+        },
+        body
+        ,{
+            runValidators: true
+        })
+        
+        if(updatePkl.matchedCount !== 0){
+            if(updatePkl.modifiedCount || updatePkl.upsertedCount){
+                return res.status(200).json({
+                    ok : true,
+                    message : "data updated"
+                })
+            }
+            return res.status(200).json({
+                ok : true,
+                message : "0 updated"
+            })
+        }
+
+        throw({name : "DNF"});
+
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
+// ==================== delete - END ==================== \\
+
+
+
+// ==================== DELETE - START ==================== \\
+exports.deleteJob = async (req,res) => {
+    try{
+        const {jobId} = req.params;
+
+        const deleteData = await Jobvacancy.findOneAndDelete({
+            _id: jobId
+        })
+
+        if(deleteData){
+            return res.status(200).json({
+                ok: true,
+                message: "successfully deleted"
+            })
+        }
+
+        throw({name: "DNF"});
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
+
+exports.deletePkl = async (req,res) => {
+    try{
+        const {pklId} = req.params;
+
+        const deleteData = await Pkl.findOneAndDelete({
+            _id: pklId
+        })
+
+        if(deleteData){
+            return res.status(200).json({
+                ok: true,
+                message: "successfully deleted"
+            })
+        }
+
+        throw({name: "DNF"});
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
+// ==================== DELETE - END ==================== \\

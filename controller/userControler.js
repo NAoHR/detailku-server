@@ -185,28 +185,91 @@ exports.certGet = async (req,res) => {
 // edit - open
 exports.editSkill = async (req,res) => {
     try{
-        const {
-            skillName,percentage
-        } = req.body;
+        const body = req.body;
         const bucket = req.bucket;
 
-        const updateData = await Skill.findOneAndUpdate({
+        const updateSkill = await Skill.updateOne({
             _id : String(bucket._id)
-        },{
-            skillName : skillName,
-            percentage : percentage
-        },{
+        },body,{
             runValidators : true,
-            new : true
+            new: true
         })
 
-        return res.status(200).json({
-            ok : true,
-            message : "updated",
-            data : updateData
-        })
+        if(updateSkill.matchedCount !== 0){
+            if(updateSkill.modifiedCount || updateSkill.upsertedCount){
+                return res.status(200).json({
+                    ok : true,
+                    message : "data updated"
+                })
+            }
+            return res.status(200).json({
+                ok : true,
+                message : "0 updated"
+            })
+        }
+        throw({name: "DNF"})
     }catch(e){
         return errorHandler(e,res);
+    }
+}
+
+exports.editProject = async (req, res) => {
+    try{
+        const body = req.body;
+        const bucket = req.bucket;
+
+        const updateProject = await Project.updateOne({
+            _id : String(bucket._id)
+        },body,{
+            runValidators : true,
+            new: true
+        })
+
+        if(updateProject.matchedCount !== 0){
+            if(updateProject.modifiedCount || updateProject.upsertedCount){
+                return res.status(200).json({
+                    ok : true,
+                    message : "data updated"
+                })
+            }
+            return res.status(200).json({
+                ok : true,
+                message : "0 updated"
+            })
+        }
+        throw({name: "DNF"})
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
+
+exports.editCert = async (req, res) => {
+    try{
+        const body = req.body;
+        const bucket = req.bucket;
+
+        const updateCert = await Cert.updateOne({
+            _id : String(bucket._id)
+        },body,{
+            runValidators : true,
+            new: true
+        })
+
+        if(updateCert.matchedCount !== 0){
+            if(updateCert.modifiedCount || updateCert.upsertedCount){
+                return res.status(200).json({
+                    ok : true,
+                    message : "data updated"
+                })
+            }
+            return res.status(200).json({
+                ok : true,
+                message : "0 updated"
+            })
+        }
+        throw({name: "DNF"});
+    }catch(e){
+        return errorHandler(e, res);
     }
 }
 // edit - close

@@ -3,6 +3,7 @@ const Cert = require("../model/Cert.model");
 const Project = require("../model/Project.model");
 const Skill = require("../model/Skill.model");
 const Detail = require("../model/Detail.model");
+const Admin = require("../model/Admin.model");
 
 require("dotenv").config();
 
@@ -80,8 +81,8 @@ const authorization = async (req,res,next) => {
                     })
             }
             if(bucket){
-
-                if(bucket.belongsTo === uid){
+                
+                if(bucket.belongsTo.toString() === uid){
                     req.bucket = bucket;
                     return next()
                 }
@@ -109,7 +110,25 @@ const authorization = async (req,res,next) => {
     }
 }
 
+const authorizationAdmin = (req, res, next) => {
+    try{
+        const {uid} = req.userCred;
+        const isAdmin = Admin.findById(uid);
+        if(isAdmin){
+            return next();
+        }
+        return res.status(403).json({
+            ok: false,
+            message: "access denied"
+        })
+    }catch(e){
+        console.log(e);
+    }
+}
+
+
 module.exports = {
     authentication,
-    authorization
+    authorization,
+    authorizationAdmin
 }
