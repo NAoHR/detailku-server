@@ -17,6 +17,8 @@ router.get("/me/cert", authentication, userControler.certGet);
 
 // edit 
 router.put("/edit/skill/:postId",authentication, authorization, strictBelongsTo, userControler.editSkill)
+router.put("/edit/project/:postId", authentication, authorization, strictBelongsTo, userControler.editProject);
+router.put("/edit/cert/:postId", authentication, authorization, strictBelongsTo, userControler.editCert);
 
 // delete
 router.delete("/delete/:postType/:postId", authentication, authorization, userControler.deletePost);
