@@ -8,7 +8,8 @@ const PklSchema = Schema({
     },
     description : {
         type: String,
-        maxLength: [250, "must be less than 250"]
+        maxLength: [250, "must be less than 250"],
+        required: [true, "description required"]
     },
     location: {
         type: String,
@@ -17,6 +18,12 @@ const PklSchema = Schema({
     lookingFor : [
         {
             type: String
+        }
+    ],
+    adviceFromSenior : [
+        {
+            type: String,
+            maxLength: 255
         }
     ]
 })

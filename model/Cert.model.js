@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
-const CertSchema = {
+const CertSchema = Schema({
     belongsTo : {
         type : mongoose.Types.ObjectId,
         ref : "User",
@@ -24,6 +24,6 @@ const CertSchema = {
     certLink : {
         type : String
     }
-}
+})
 
 module.exports = mongoose.model("Cert",CertSchema)

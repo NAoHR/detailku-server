@@ -4,6 +4,7 @@ const Cert = require("../model/Cert.model");
 const Skill = require("../model/Skill.model");
 const Project = require("../model/Project.model");
 const Job = require("../model/Job.model");
+const PublicMsg = require("../model/publicMessage.model");
 const {errorHandler} = require("../utils/utils");
 
 exports.alldata = async function(req,res) {
@@ -158,5 +159,36 @@ exports.jobData = async (req,res) => {
         })
     }catch(e){
         return errorHandler(e,res);
+    }
+}
+
+
+exports.postPublicMsg = async (req, res) => {
+    try{
+        const body = req.body;
+        const createPublicMsg = PublicMsg(body);
+
+        await createPublicMsg.save();
+
+        return res.status(200).json({
+            ok: true,
+            message: "data added",
+            data: createPublicMsg
+        })
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
+
+exports.getPublicMsg = async (req, res) => {
+    try{
+        const allPublicMsg = await PublicMsg.find();
+        return res.status(200).json({
+            ok: true,
+            message: "successfully fetched",
+            data: allPublicMsg
+        })
+    }catch(e){
+        return errorHandler(e, res);
     }
 }
