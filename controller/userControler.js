@@ -3,6 +3,7 @@ const User = require("../model/User.model");
 const Skill = require("../model/Skill.model");
 const Project = require("../model/Project.model");
 const Detail = require("../model/Detail.model");
+const privatemessage = require("../model/PrivateMessage.model");
 const {errorHandler} = require("../utils/utils");
 
 // ADD - open
@@ -164,6 +165,20 @@ exports.projectGet = async (req,res) => {
             ok : false,
             message : "internal error"
         })
+    }
+}
+
+exports.privateMessageGet = async  (req, res) => {
+    try{
+        const {uid} = req.userCred;
+        
+        const allPrivatemsg = await privatemessage.find({ belongsTo: uid});
+        return res.status(200).json({
+            ok: true,
+            data: allPrivatemsg
+        })
+    }catch(e){
+        return errorHandler(e, res)
     }
 }
 
