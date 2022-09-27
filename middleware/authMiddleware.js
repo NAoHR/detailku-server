@@ -4,6 +4,8 @@ const Project = require("../model/Project.model");
 const Skill = require("../model/Skill.model");
 const Detail = require("../model/Detail.model");
 const Admin = require("../model/Admin.model");
+const { errorHandler } = require("../utils/utils");
+const PrivateMessageModel = require("../model/PrivateMessage.model");
 
 require("dotenv").config();
 
@@ -18,12 +20,14 @@ const authentication = async (req,res,next) => {
                         case "TokenExpiredError" :
                             return res.status(401).json({
                                 ok : false,
-                                message : "token expired"
+                                failedLoginRelated : true,
+                                message : "Session expired"
                             });
                         case "JsonWebTokenError":
                             return res.status(401).json({
                                 ok : false,
-                                message : "wrong token format"
+                                failedLoginRelated : true,
+                                message : "kamu telah logout"
                             })
                         default:
                             console.log(err);
@@ -45,11 +49,7 @@ const authentication = async (req,res,next) => {
             message : "token not found"
         })
     }catch(e){
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e, res);
     }
 }
 
@@ -68,12 +68,17 @@ const authorization = async (req,res,next) => {
                 case "project":
                     bucket = await Project.findOne({_id : postId});
                     break;
-                case "skill":
+                case "skill":   
                     bucket = await Skill.findOne({_id : postId});
                     break;
                 case "detail":
                     bucket = await Detail.findOne({_id : postId});
                     break
+                case "privateMessage":
+                    bucket = await PrivateMessageModel.findOne({_id: postId});
+                    console.log(bucket)
+                    break;
+
                 default:
                     return res.status(400).json({
                         ok : false,
@@ -102,11 +107,7 @@ const authorization = async (req,res,next) => {
         })
 
     } catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            ok : false,
-            message : "internal error"
-        })
+        return errorHandler(e, res);
     }
 }
 
