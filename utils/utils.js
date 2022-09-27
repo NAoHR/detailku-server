@@ -8,7 +8,7 @@ exports.errorHandler = (errorMessage,res) => {
             message : message
         })
     }
-    console.log(errorMessage);
+    
 
     switch(errorMessage?.name){
         case "ValidationError":
