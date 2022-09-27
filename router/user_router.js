@@ -14,6 +14,7 @@ router.get("/me", authentication, userControler.me);
 router.get("/me/skill", authentication, userControler.skillGet);
 router.get("/me/project", authentication, userControler.projectGet);
 router.get("/me/cert", authentication, userControler.certGet);
+router.get("/me/message", authentication, userControler.privateMessageGet);
 
 // edit 
 router.put("/edit/skill/:postId",authentication, authorization, strictBelongsTo, userControler.editSkill)

@@ -5,7 +5,7 @@ const PublicMsgSChema = Schema({
     sender : {
         type: String,
         default : "Anon",
-        maxLength: 100
+        maxLength: 25
     },
     message: {
         type: String,

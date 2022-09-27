@@ -51,7 +51,13 @@ const UserSchema = Schema({
     skill : [{
         type : Schema.Types.ObjectId,
         ref : "Skill"
-    }]
+    }],
+    privateMessage: [
+        {
+            type: Schema.Types.ObjectId,
+            ref : "PrivateMessage"
+        }
+    ]
 })
 
 UserSchema.methods = {

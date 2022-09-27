@@ -3,7 +3,9 @@ const User = require("../model/User.model");
 const Skill = require("../model/Skill.model");
 const Project = require("../model/Project.model");
 const Detail = require("../model/Detail.model");
+const privatemessage = require("../model/PrivateMessage.model");
 const {errorHandler} = require("../utils/utils");
+const PrivateMessageModel = require("../model/PrivateMessage.model");
 
 // ADD - open
 exports.postcert = async (req,res) => {
@@ -122,7 +124,8 @@ exports.me = async (req,res) => {
                     detail : userDetail,
                     certificate : userCert,
                     skill : userSkill,
-                    project : userProject
+                    project : userProject,
+                    privatemessage: user.privateMessage
                 }
             })
         }
@@ -164,6 +167,20 @@ exports.projectGet = async (req,res) => {
             ok : false,
             message : "internal error"
         })
+    }
+}
+
+exports.privateMessageGet = async  (req, res) => {
+    try{
+        const {uid} = req.userCred;
+        
+        const allPrivatemsg = await privatemessage.find({ belongsTo: uid});
+        return res.status(200).json({
+            ok: true,
+            data: allPrivatemsg
+        })
+    }catch(e){
+        return errorHandler(e, res)
     }
 }
 
@@ -287,20 +304,24 @@ exports.deletePost = async (req,res) => {
         switch(postType){
             case "skill":
                 delBucket = await Skill.deleteOne({_id : _id});
-                postBelongsTo.skill = postBelongsTo.skill.filter((i) => i === _id);
+                postBelongsTo.skill = postBelongsTo.skill.filter(i => String(i._id) !== String(_id));
                 break;
             case "project":
                 delBucket = await Project.deleteOne({_id : _id});
-                postBelongsTo.project = postBelongsTo.project.filter((i) => i === _id);
+                postBelongsTo.project = postBelongsTo.project.filter(i => String(i._id) !== String(_id));
                 break;
             case "cert":
                 delBucket = await Cert.deleteOne({_id : _id});
-                postBelongsTo.cert = postBelongsTo.cert.filter((i) => i === _id);
+                postBelongsTo.certificate = postBelongsTo.certificate.filter(i => String(i._id) !== String(_id));
+            case "privateMessage":
+                delBucket = await PrivateMessageModel.deleteOne({_id : _id});
+                postBelongsTo.privateMessage = postBelongsTo.privateMessage.filter(i => String(i._id) !== String(_id));
+                console.log(postBelongsTo)
                 break;
             default:
                 return res.status(403).json({
                     ok : true,
-                    message : "only accept skill, project, cert"
+                    message : "only accept skill, project, cert, and private message"
                 })
         }
 

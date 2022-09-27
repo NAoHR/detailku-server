@@ -5,6 +5,7 @@ const Skill = require("../model/Skill.model");
 const Project = require("../model/Project.model");
 const Job = require("../model/Job.model");
 const PublicMsg = require("../model/publicMessage.model");
+const privateMessage = require("../model/PrivateMessage.model");
 const {errorHandler} = require("../utils/utils");
 
 exports.alldata = async function(req,res) {
@@ -79,6 +80,7 @@ exports.usernameBasedUser = async function(req,res){
 
             return data.map((val)=>{
                 return {
+                    _id : val._id,
                     username : val.username,
                     name : val.name,
                     grade : val.grade,
@@ -188,6 +190,36 @@ exports.getPublicMsg = async (req, res) => {
             message: "successfully fetched",
             data: allPublicMsg
         })
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
+
+// post
+
+exports.sendPrivateMessage = async (req, res) => {
+    try{
+        const {userId} = req.params;
+        const findUser = await User.findOne({_id: userId});
+        console.log(findUser);
+        if(findUser){
+            const {from, email, message} = req.body
+            const newMessage = new privateMessage(
+                {
+                    from,email,message,belongsTo : findUser._id
+                }
+            );
+            findUser.privateMessage.push(newMessage._id);
+            await newMessage.save();
+            await findUser.save();
+            
+            return res.status(200).json({
+                ok: true,
+                message: "data added"
+            })
+        }
+
+        throw({name: "UNF"});
     }catch(e){
         return errorHandler(e, res);
     }
