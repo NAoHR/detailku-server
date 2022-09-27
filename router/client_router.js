@@ -9,7 +9,7 @@ router.get("/grade/:grade",getUrlMiddleware ,clientController.gradeBasedUser);
 router.get("/jobs", clientController.jobData);
 router.get("/publicMsg", clientController.getPublicMsg);
 
-router.post("/post/publicMsa", clientController.postPublicMsg);
+router.post("/post/publicMsg", clientController.postPublicMsg);
 router.post("/post/privateMsg/:userId", clientController.sendPrivateMessage);
 
 module.exports = router
