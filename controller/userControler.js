@@ -289,6 +289,39 @@ exports.editCert = async (req, res) => {
         return errorHandler(e, res);
     }
 }
+
+
+
+exports.editCreds = async (req, res) => {
+    try{
+        const body = req.body;
+        const bucket = req.bucket;
+
+        const updateCreds = await Detail.updateOne({
+            _id : String(bucket._id)
+        },body,{
+            runValidators : true,
+            new: true
+        })
+
+        if(updateCreds.matchedCount !== 0){
+            if(updateCreds.modifiedCount || updateCreds.upsertedCount){
+                return res.status(200).json({
+                    ok : true,
+                    message : "data updated"
+                })
+            }
+            return res.status(200).json({
+                ok : true,
+                message : "0 updated"
+            })
+        }
+        throw({name: "DNF"})
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
+
 // edit - close
 
 // delete - open

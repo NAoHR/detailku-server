@@ -6,6 +6,7 @@ const Detail = require("../model/Detail.model");
 const Admin = require("../model/Admin.model");
 const { errorHandler } = require("../utils/utils");
 const PrivateMessageModel = require("../model/PrivateMessage.model");
+const DetailModel = require("../model/Detail.model");
 
 require("dotenv").config();
 
@@ -65,18 +66,25 @@ const authorization = async (req,res,next) => {
                 case "cert":
                     bucket = await Cert.findOne({_id : postId});
                     break;
+                    
                 case "project":
                     bucket = await Project.findOne({_id : postId});
                     break;
+
                 case "skill":   
                     bucket = await Skill.findOne({_id : postId});
                     break;
+
                 case "detail":
                     bucket = await Detail.findOne({_id : postId});
                     break
+
                 case "privateMessage":
                     bucket = await PrivateMessageModel.findOne({_id: postId});
-                    console.log(bucket)
+                    break;
+
+                case "creds":
+                    bucket = await DetailModel.findOne({_id: postId});
                     break;
 
                 default:
