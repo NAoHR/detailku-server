@@ -20,6 +20,7 @@ router.get("/me/message", authentication, userControler.privateMessageGet);
 router.put("/edit/skill/:postId",authentication, authorization, strictBelongsTo, userControler.editSkill)
 router.put("/edit/project/:postId", authentication, authorization, strictBelongsTo, userControler.editProject);
 router.put("/edit/cert/:postId", authentication, authorization, strictBelongsTo, userControler.editCert);
+router.put("/edit/creds/:postId", authentication, authorization, strictBelongsTo, userControler.editCreds);
 
 // delete
 router.delete("/delete/:postType/:postId", authentication, authorization, userControler.deletePost);
