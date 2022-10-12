@@ -6,6 +6,7 @@ const Detail = require("../model/Detail.model");
 const privatemessage = require("../model/PrivateMessage.model");
 const {errorHandler} = require("../utils/utils");
 const PrivateMessageModel = require("../model/PrivateMessage.model");
+const bcrypt = require("bcrypt");
 
 // ADD - open
 exports.postcert = async (req,res) => {
@@ -322,6 +323,39 @@ exports.editCreds = async (req, res) => {
     }
 }
 
+exports.editAuth = async (req, res) => {
+    try{
+
+        const body = req.body;
+        const {uid} = req.userCred;
+        const newBody = {};
+
+        if("username" in body) newBody["username"] = body.username;
+        if("name" in body) newBody["name"] = body.name;
+        if("password" in body) newBody["password"] = await bcrypt.hash(body.password, 10);
+
+        const editUserAuth = await User.updateOne({_id : uid}, newBody,{
+            runValidators : true,
+            new: true
+        } )
+
+        if(editUserAuth.matchedCount !== 0){
+            if(editUserAuth.modifiedCount || editUserAuth.upsertedCount){
+                return res.status(200).json({
+                    ok : true,
+                    message : "data updated"
+                })
+            }
+            return res.status(200).json({
+                ok : true,
+                message : "0 updated"
+            })
+        }
+
+    }catch(e){
+        return errorHandler(e, res);
+    }
+}
 // edit - close
 
 // delete - open

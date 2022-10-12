@@ -21,6 +21,7 @@ router.put("/edit/skill/:postId",authentication, authorization, strictBelongsTo,
 router.put("/edit/project/:postId", authentication, authorization, strictBelongsTo, userControler.editProject);
 router.put("/edit/cert/:postId", authentication, authorization, strictBelongsTo, userControler.editCert);
 router.put("/edit/creds/:postId", authentication, authorization, strictBelongsTo, userControler.editCreds);
+router.put("/edit/auth", authentication, userControler.editAuth);
 
 // delete
 router.delete("/delete/:postType/:postId", authentication, authorization, userControler.deletePost);
