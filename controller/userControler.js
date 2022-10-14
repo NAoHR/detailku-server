@@ -332,12 +332,18 @@ exports.editAuth = async (req, res) => {
 
         if("username" in body) newBody["username"] = body.username;
         if("name" in body) newBody["name"] = body.name;
-        if("password" in body) newBody["password"] = await bcrypt.hash(body.password, 10);
+        if("password" in body) {
+            if(body.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm)){
+                newBody["password"] = await bcrypt.hash(body.password, 10)
+            }else{
+                throw({name: "PVF"})
+            }
+        };
 
         const editUserAuth = await User.updateOne({_id : uid}, newBody,{
             runValidators : true,
             new: true
-        } )
+        })
 
         if(editUserAuth.matchedCount !== 0){
             if(editUserAuth.modifiedCount || editUserAuth.upsertedCount){
