@@ -49,6 +49,8 @@ exports.errorHandler = (errorMessage,res) => {
                     return errMess();
 
             }
+        case "PVF":
+            return errMess(403, "Password validation failed", "password should contain lowercase,uppercase,number, and symbol")
         default:
             return errMess();
 
