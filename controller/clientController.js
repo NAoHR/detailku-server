@@ -60,6 +60,21 @@ exports.alldata = async function(req,res) {
                             "count" : allData.filter((val) => val.grade === "XII_SIJA_2").length,
                         }
                     ]
+                },
+                {
+                    "grade" : "XIII SIJA",
+                    "data" : [
+                        {
+                            "subgrade" : "XIII SIJA 1",
+                            "path" : `${path}XII_SIJA_1`,
+                            "count" : allData.filter((val) => val.grade === "XIII_SIJA_1").length,
+                        },
+                        {
+                            "subgrade" : "XIII SIJA 2",
+                            "path" : `${path}XII_SIJA_2`,
+                            "count" : allData.filter((val) => val.grade === "XIII_SIJA_2").length,
+                        }
+                    ]
                 }
             ]
         })

@@ -24,7 +24,9 @@ const UserSchema = Schema({
             "XI_SIJA_1",
             "XI_SIJA_2",
             "XII_SIJA_1",
-            "XII_SIJA_2"
+            "XII_SIJA_2",
+            "XIII_SIJA_1",
+            "XIII_SIJA_2"
         ]
     },
     username : {
