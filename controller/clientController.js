@@ -203,7 +203,7 @@ exports.getPublicMsg = async (req, res) => {
         return res.status(200).json({
             ok: true,
             message: "successfully fetched",
-            data: allPublicMsg
+            data: allPublicMsg.reverse()
         })
     }catch(e){
         return errorHandler(e, res);
